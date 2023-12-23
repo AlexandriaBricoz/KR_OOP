@@ -27,31 +27,32 @@ public class ExperimentApp extends Application {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Эксперимент с рыбоводством");
 
-        // Input fields
+        // Инициализация текстовых полей ввода
         contractDurationField = new TextField();
         weeklyFeedCostField = new TextField();
         contactNameField = new TextField();
         contactEmailField = new TextField();
         contactPhoneField = new TextField();
 
-        // Lists for pond input fields
+        // Инициализация списков для полей ввода о прудах
         pondSizeFields = new ArrayList<>();
         pondDepthFields = new ArrayList<>();
         fishTypeFields = new ArrayList<>();
         fishPriceFields = new ArrayList<>();
         foodPriceFields = new ArrayList<>();
 
-        // Buttons
+        // Инициализация кнопок
         Button addPondButton = new Button("Добавить пруд");
         addPondButton.setOnAction(e -> addPondFields());
 
         Button initButton = new Button("Инициализировать эксперимент");
         initButton.setOnAction(e -> {
             initializeExperiment();
+            fishFarm.simulateContractPeriod();
             checkProfitability();
         });
 
-        // Layout setup
+        // Настройка компоновки элементов
         VBox root = new VBox(10);
         root.getChildren().addAll(createInputFields(), addPondButton, initButton, createResultLabels());
 
@@ -60,6 +61,7 @@ public class ExperimentApp extends Application {
         primaryStage.show();
     }
 
+    // Метод для добавления полей пруда
     private void addPondFields() {
         Label pondLabel = new Label("Пруд " + (pondSizeFields.size() + 1));
 
@@ -69,6 +71,7 @@ public class ExperimentApp extends Application {
         TextField fishPriceField = new TextField();
         TextField foodPriceField = new TextField();
 
+        // Добавление полей в соответствующие списки
         pondSizeFields.add(pondSizeField);
         pondDepthFields.add(pondDepthField);
         fishTypeFields.add(fishTypeField);
@@ -85,9 +88,11 @@ public class ExperimentApp extends Application {
                 new Label("Стоимость корма:"), foodPriceField
         );
 
+        // Добавление новых полей на сцену
         ((VBox) primaryStage.getScene().getRoot()).getChildren().add(((VBox) primaryStage.getScene().getRoot()).getChildren().size() - 1, pondFields);
     }
 
+    // Метод для создания полей ввода
     private VBox createInputFields() {
         Label durationLabel = new Label("Длительность контракта:");
         Label weeklyFeedCostLabel = new Label("Еженедельная стоимость корма:");
@@ -104,29 +109,43 @@ public class ExperimentApp extends Application {
                 contactPhoneLabel, contactPhoneField
         );
 
-        for (int i = 0; i < pondSizeFields.size(); i++) {
-            Label pondLabel = new Label("Пруд " + (i / 5 + 1));
+        // Добавление полей для каждого пруда
+        // Добавление полей для каждого пруда
+        int pondIndex = 0;
+        while (pondIndex < pondSizeFields.size()) {
+            Label pondLabel = new Label("Пруд " + (pondIndex / 5 + 1));
             inputFields.getChildren().addAll(
                     pondLabel,
-                    new Label("Размер пруда:"), pondSizeFields.get(i++),
-                    new Label("Глубина пруда:"), pondSizeFields.get(i++),
-                    new Label("Тип рыбы:"), pondSizeFields.get(i++),
-                    new Label("Стоимость рыбы:"), pondSizeFields.get(i++),
-                    new Label("Стоимость корма:"), pondSizeFields.get(i)
+                    new Label("Размер пруда:"), pondSizeFields.get(pondIndex),
+                    new Label("Глубина пруда:"), pondDepthFields.get(pondIndex),
+                    new Label("Тип рыбы:"), fishTypeFields.get(pondIndex),
+                    new Label("Стоимость рыбы:"), fishPriceFields.get(pondIndex),
+                    new Label("Стоимость корма:"), foodPriceFields.get(pondIndex)
             );
+            pondIndex++;
         }
 
         return inputFields;
     }
 
+    // Метод для инициализации эксперимента
     private void initializeExperiment() {
         try {
             int contractDuration = Integer.parseInt(contractDurationField.getText());
             double weeklyFeedCost = Double.parseDouble(weeklyFeedCostField.getText());
 
+            // Проверка, что все поля прудов заполнены
+            if (pondSizeFields.isEmpty() || pondDepthFields.isEmpty() || fishTypeFields.isEmpty() || fishPriceFields.isEmpty() || foodPriceFields.isEmpty()) {
+                System.out.println("Пожалуйста, добавьте информацию о прудах.");
+                return;
+            }
+
+            // Создание деталей контракта
             contractDetails = new ContractDetails(contractDuration, weeklyFeedCost);
+            // Создание списка прудов на основе введенных данных
             List<Pond> fishPonds = createPondsFromInput();
 
+            // Создание фирмы и рыбоводческой фермы
             Firm firm = new Firm("Google", 200);
             fishFarm = new FishFarm(560000, contractDuration, contractDetails, fishPonds);
 
@@ -135,16 +154,16 @@ public class ExperimentApp extends Application {
             System.out.println("Пожалуйста, введите корректные числовые значения для длительности контракта и еженедельной стоимости корма.");
         }
     }
-
+    // Метод для создания списка прудов из введенных данных
     private List<Pond> createPondsFromInput() {
         List<Pond> ponds = new ArrayList<>();
 
-        for (int i = 0; i < pondSizeFields.size(); i += 5) {
+        for (int i = 0; i < pondSizeFields.size(); i++) {
             double pondSize = Double.parseDouble(pondSizeFields.get(i).getText());
-            int pondDepth = Integer.parseInt(pondSizeFields.get(i + 1).getText());
-            String fishType = pondSizeFields.get(i + 2).getText();
-            double fishPrice = Double.parseDouble(pondSizeFields.get(i + 3).getText());
-            double foodPrice = Double.parseDouble(pondSizeFields.get(i + 4).getText());
+            int pondDepth = Integer.parseInt(pondDepthFields.get(i).getText());
+            String fishType = fishTypeFields.get(i).getText();
+            double fishPrice = Double.parseDouble(fishPriceFields.get(i).getText());
+            double foodPrice = Double.parseDouble(foodPriceFields.get(i).getText());
 
             Pond pond = new Pond(pondSize, pondDepth, fishType, (int) fishPrice, (int) foodPrice);
             ponds.add(pond);
@@ -153,6 +172,7 @@ public class ExperimentApp extends Application {
         return ponds;
     }
 
+    // Метод для создания меток с результатами
     private VBox createResultLabels() {
         Label totalCapitalLabel = new Label("Общий капитал:");
         Label totalFeedCostLabel = new Label("Общая стоимость корма:");
@@ -171,6 +191,7 @@ public class ExperimentApp extends Application {
         return resultLabels;
     }
 
+    // Метод для проверки рентабельности
     private void checkProfitability() {
         try {
             double totalCapital = fishFarm.calculateTotalCapital();
