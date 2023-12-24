@@ -1,6 +1,6 @@
 package com.example.demo;
 
-class ContractDetails {
+public class ContractDetails {
     private int duration;
     private double weeklyFeedCost;
 

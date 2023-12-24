@@ -2,7 +2,7 @@ package com.example.demo;
 
 import java.util.List;
 
-class FishFarm {
+public class FishFarm {
     private double capital;
     private int contractDuration;
     private ContractDetails contractDetails;
@@ -61,17 +61,27 @@ class FishFarm {
         }
 
 
-        return (totalFishValue);
+        return totalFishValue;
+    }
+    double calculateTotalFishValueYoungPrice() {
+        double totalFishValue = 0;
+
+
+        for (Pond pond : fishPonds) {
+            double pondFishValue = (Double.isNaN(pond.getFishPopulation("young")) ? 0.0 : pond.getFishPopulation("young"));
+            totalFishValue += (pondFishValue) * pond.getPrice();
+        }
+
+
+        return totalFishValue;
     }
 
     double calculateTotalFishValueAdult() {
         double totalFishValue = 0;
 
-
         for (Pond pond : fishPonds) {
 
             // Checking for None and setting default value
-
 
             double pondFishValue = Double.isNaN(pond.getFishPopulation("adult")) ? 0.0 : pond.getFishPopulation("adult");
             totalFishValue += pondFishValue;
@@ -79,7 +89,22 @@ class FishFarm {
         }
 
 
-        return (totalFishValue);
+        return totalFishValue;
+    }
+    double calculateTotalFishValueAdultPrice() {
+        double totalFishValue = 0;
+
+        double summ = 0;
+        for (Pond pond : fishPonds) {
+
+            // Checking for None and setting default value
+
+            summ = summ + (pond.getAdultFish()) * pond.getPrice();
+
+        }
+
+
+        return summ;
     }
 
 

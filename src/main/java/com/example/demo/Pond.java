@@ -3,9 +3,11 @@ package com.example.demo;
 import java.util.HashMap;
 import java.util.Map;
 
-class Pond {
+public class Pond {
     private Map<String, Double> fishPopulation;
     private int cleaningPeriod;
+
+    private double adultFish;
     private int weeksSinceCleaning;
     private int price;
     private String fishType;
@@ -47,6 +49,8 @@ class Pond {
         double newYoungFish = alpha * youngFish;
         double newAdultFish = beta * youngFish - delta * (adultFish + youngFish);
 
+        adultFish += newAdultFish;
+
         fishPopulation.put("young", newYoungFish);
         fishPopulation.put("adult", newAdultFish);
 
@@ -62,6 +66,8 @@ class Pond {
         this.fishPopulation.put("adult", 0.0);
         weeksSinceCleaning = 0;
     }
+
+    public double getAdultFish() { return adultFish; }
 
     public double getFishPopulation(String category) {
         return fishPopulation.get(category);
