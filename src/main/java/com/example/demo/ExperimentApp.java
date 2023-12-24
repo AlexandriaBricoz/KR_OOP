@@ -17,7 +17,7 @@ public class ExperimentApp extends Application {
     private FishFarm fishFarm;
     private ContractDetails contractDetails;
     private Stage primaryStage;
-
+    private static TextArea textArea;
     private TextField contractDurationField, weeklyFeedCostField;
     private TextArea reportTextArea;
 
@@ -55,12 +55,21 @@ public class ExperimentApp extends Application {
             VBox buttonsVBox = new VBox(10);
             buttonsVBox.getChildren().addAll(addPondButton, initButton);
 
+            textArea = new TextArea();
+            textArea.setEditable(false); // Сделаем текстовое поле только для чтения
+
+            Tab textTab = new Tab("Консоль");
+            textTab.setContent(textArea);
+
             reportTextArea = new TextArea();
             reportTextArea.setEditable(false);
             reportTextArea.setWrapText(true);
 
+
+
             Tab reportTab = new Tab("Отчет");
             reportTab.setContent(reportTextArea);
+
 
             VBox root = new VBox(10);
             root.getChildren().addAll(tabPane, buttonsVBox);
@@ -70,17 +79,22 @@ public class ExperimentApp extends Application {
             primaryStage.show();
 
             // Добавление вкладки "Контракт"
+
             Tab contractTab = addContractFields();
             tabPane.getTabs().add(contractTab);
 
             // Добавление вкладки "Отчет"
+
             tabPane.getTabs().add(reportTab);
+            tabPane.getTabs().add(textTab);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Exception: " + e.getMessage());
         }
     }
-
+    public static void appendTextToTextArea(String text) {
+        textArea.appendText(text + "\n");
+    }
     private Tab addContractFields() {
 
         GridPane contractGrid = new GridPane();
@@ -124,10 +138,6 @@ public class ExperimentApp extends Application {
         pondGrid.addRow(3, new Label("Стоимость рыбы:"), fishPriceField);
         pondGrid.addRow(4, new Label("Стоимость корма:"), foodPriceField);
 
-        // Добавление полей контракта для каждого нового пруда
-//        pondGrid.addRow(5, new Label("Длительность контракта:"), contractDurationField);
-//        pondGrid.addRow(6, new Label("Еженедельная стоимость корма:"), weeklyFeedCostField);
-
         Tab newTab = new Tab("Пруд " + (pondIndex - 1));
         newTab.setContent(pondGrid);
         pondTabs.add(newTab);
@@ -151,8 +161,10 @@ public class ExperimentApp extends Application {
             fishFarm = new FishFarm(560000, contractDuration, contractDetails, fishPonds);
 
             System.out.println("Эксперимент успешно инициализирован");
+            appendTextToTextArea("Пожалуйста, введите корректные числовые значения для длительности контракта и еженедельной стоимости корма.");
         } catch (NumberFormatException ex) {
             System.out.println("Пожалуйста, введите корректные числовые значения для длительности контракта и еженедельной стоимости корма.");
+            appendTextToTextArea("Пожалуйста, введите корректные числовые значения для длительности контракта и еженедельной стоимости корма.");
         }
     }
 
@@ -184,7 +196,7 @@ public class ExperimentApp extends Application {
                     "Общий капитал: " + Math.round(totalCapital) + "\n" +
                             "Общая стоимость корма: " + Math.round(totalFeedCost) + "\n" +
                             "Общая стоимость рыбы: " + Math.round(totalFishValue) + "\n" +
-                            "Прибыль: " + profit + "\n" +
+                            "Прибыль: " + Math.round(profit) + "\n" +
                             ((profit >= 0) ? "Рентабельность: Контракт прибыльный!" : "Рентабельность: Контракт не прибыльный.")
             );
 

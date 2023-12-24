@@ -34,15 +34,20 @@ public class FishFarm {
 
     private void printWeeklyReport(int week) {
         System.out.println("===== Weekly Report - Week " + (week + 1) + " =====");
+        ExperimentApp.appendTextToTextArea("===== Weekly Report - Week " + (week + 1) + " =====");
         for (int i = 0; i < fishPonds.length; i++) {
             Pond pond = fishPonds[i];
             System.out.println("Pond " + (i + 1) + ": Young Fish - " + Math.round(pond.getFishPopulation("young")) +
+                    ", Adult Fish - " + Math.round(pond.getFishPopulation("adult")) +
+                    ", Fish Type - " + pond.getFishType());
+            ExperimentApp.appendTextToTextArea("Pond " + (i + 1) + ": Young Fish - " + Math.round(pond.getFishPopulation("young")) +
                     ", Adult Fish - " + Math.round(pond.getFishPopulation("adult")) +
                     ", Fish Type - " + pond.getFishType());
             pond.setFishPopulation("adult", 0);
         }
         double roundedTotalCapital = Math.round(calculateTotalCapital() * 100.0) / 100.0;
         System.out.println("Total Capital at the end of the contract: " + roundedTotalCapital);
+        ExperimentApp.appendTextToTextArea("Total Capital at the end of the contract: " + roundedTotalCapital);
         System.out.println();
     }
 
