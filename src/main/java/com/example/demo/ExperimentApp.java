@@ -84,7 +84,6 @@ public class ExperimentApp extends Application {
             tabPane.getTabs().add(contractTab);
 
             // Добавление вкладки "Отчет"
-
             tabPane.getTabs().add(reportTab);
             tabPane.getTabs().add(textTab);
         } catch (Exception e) {
@@ -133,8 +132,8 @@ public class ExperimentApp extends Application {
 
         // Добавление текстовых полей для ввода данных о пруде на вкладке "Прод"
         pondGrid.addRow(0, new Label("Размер пруда:"), pondSizeField);
-        pondGrid.addRow(1, new Label("Глубина пруда:"), pondDepthField);
-        pondGrid.addRow(2, new Label("Тип рыбы:"), fishTypeField);
+        pondGrid.addRow(1, new Label("Период очистки:"), pondDepthField);
+        pondGrid.addRow(2, new Label("Название рыбы:"), fishTypeField);
         pondGrid.addRow(3, new Label("Стоимость рыбы:"), fishPriceField);
         pondGrid.addRow(4, new Label("Стоимость корма:"), foodPriceField);
 
@@ -161,7 +160,7 @@ public class ExperimentApp extends Application {
             fishFarm = new FishFarm(560000, contractDuration, contractDetails, fishPonds);
 
             System.out.println("Эксперимент успешно инициализирован");
-            appendTextToTextArea("Пожалуйста, введите корректные числовые значения для длительности контракта и еженедельной стоимости корма.");
+            appendTextToTextArea("Эксперимент успешно инициализирован");
         } catch (NumberFormatException ex) {
             System.out.println("Пожалуйста, введите корректные числовые значения для длительности контракта и еженедельной стоимости корма.");
             appendTextToTextArea("Пожалуйста, введите корректные числовые значения для длительности контракта и еженедельной стоимости корма.");
